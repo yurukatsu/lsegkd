@@ -7,6 +7,8 @@ from typing import List, Dict, Optional
 
 from pydantic import BaseModel, Field
 
+from lsegkd.core.types import StrId
+
 
 class UtteranceSegment(BaseModel):
     """
@@ -82,7 +84,7 @@ class EventTranscript(BaseModel):
     Root model for an event transcript.
     """
 
-    event_id: Optional[str] = None
+    event_id: Optional[StrId] = None
     last_edited: Optional[datetime.datetime] = None
     version: Optional[str] = None
     notes: Optional[str] = None

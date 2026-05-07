@@ -22,15 +22,11 @@ re-exported from `lsegkd.api`.
 from __future__ import annotations
 
 import datetime
-from typing import Annotated, Literal, Optional
+from typing import Literal, Optional
 
-from pydantic import BaseModel, BeforeValidator
+from pydantic import BaseModel
 
-
-# Coerces numeric IDs to string. The LSEG API returns `EventId` as an integer,
-# but downstream code (filenames, dict keys, JSON stringification) is much
-# happier with strings. Stays a string if already provided as one.
-StrId = Annotated[str, BeforeValidator(lambda v: str(v) if isinstance(v, int) else v)]
+from lsegkd.core.types import StrId
 
 
 # Publication status of a piece of content (transcript, brief). Distinct from
