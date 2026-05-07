@@ -121,3 +121,19 @@ def test_missing_event_id_returns_none():
     assert event.last_edited is None
     assert event.transcript.speakers == {}
     assert event.transcript.episode.sections == []
+
+
+def test_event_id_coerced_from_int_when_constructed_directly():
+    """Loading from a non-XML source (DB, other tool) may pass an int —
+    StrId must coerce to str so downstream code (filenames, dict keys)
+    behaves consistently with `EventHeadline.EventId`."""
+    from lsegkd.xml import EventTranscript
+
+    event = EventTranscript.model_validate(
+        {
+            "event_id": 16721770,
+            "transcript": {"speakers": {}, "episode": {"sections": []}},
+        }
+    )
+    assert event.event_id == "16721770"
+    assert isinstance(event.event_id, str)
