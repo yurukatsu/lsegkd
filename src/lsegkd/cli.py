@@ -175,6 +175,7 @@ async def _fetch_transcripts(
     output_dir: Path,
     transcript_status: ContentStatus | None,
     skip_existing: bool,
+    limit: int | None,
 ) -> None:
     """Async worker for the fetch-transcripts command."""
     xml_dir, headlines_dir, transcripts_dir = _ensure_output_tree(output_dir)
@@ -210,18 +211,23 @@ async def _fetch_transcripts(
         )
         pagination = response.extract_pagination_result()
         total = pagination.TotalRecords
+        effective_total = min(total, limit) if limit is not None else total
         n_pages = (total + records_per_page - 1) // max(records_per_page, 1)
         logger.info(
             f"Total records: {total} "
             f"(records_per_page={records_per_page}, ~{n_pages} page(s))."
+            + (f" Limited to {limit}." if limit is not None else "")
         )
 
+        processed = 0
         with _make_progress() as progress:
-            task = progress.add_task("Fetching events", total=total)
+            task = progress.add_task("Fetching events", total=effective_total)
 
             while True:
                 if pagination.RecordsOnPage > 0:
                     for headline in response.extract_event_headlines():
+                        if limit is not None and processed >= limit:
+                            break
                         progress.update(
                             task,
                             description=f"EventId={headline.EventId}",
@@ -235,7 +241,11 @@ async def _fetch_transcripts(
                             skip_existing=skip_existing,
                         )
                         counts[result] += 1
+                        processed += 1
                         progress.advance(task)
+
+                if limit is not None and processed >= limit:
+                    break
 
                 # Stop once we've consumed every record or the page came back empty.
                 seen = pagination.PageNumber * pagination.RecordsPerPage
@@ -322,6 +332,14 @@ def fetch_transcripts(
             dir_okay=True,
         ),
     ] = Path("./output"),
+    limit: Annotated[
+        int | None,
+        typer.Option(
+            "--limit",
+            help="Maximum number of events to process. Default is no limit.",
+            min=1,
+        ),
+    ] = None,
 ) -> None:
     """Fetch event transcripts in a date range and save them to disk.
 
@@ -338,5 +356,6 @@ def fetch_transcripts(
             output_dir=output_dir,
             transcript_status=_to_api_status(transcript_status),
             skip_existing=skip_existing,
+            limit=limit,
         )
     )
