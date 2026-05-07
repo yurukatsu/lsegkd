@@ -15,7 +15,7 @@ This project uses `uv` for dependency management and `poethepoet` (`poe`) as the
 - Test: `uv run poe test` (pytest)
 - All of the above (= pre-commit hook entry): `uv run poe check`
 - Run a single test: `uv run pytest tests/api/test_street_events.py::test_get_document_falls_back_to_signed_url`
-- Run the CLI: `uv run lsegkd -d .env fetch-transcripts --from_date YYYY-MM-DD --to_date YYYY-MM-DD --countries US`
+- Run the CLI: `uv run lsegkd -d .env fetch-transcripts --from-date YYYY-MM-DD --to-date YYYY-MM-DD --countries US`
 
 ## Authentication
 
