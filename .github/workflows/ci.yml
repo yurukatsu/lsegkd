@@ -1,0 +1,45 @@
+name: CI
+
+# Runs on every push to main and on every PR.
+# Lints, type-checks, tests, and uploads coverage to Codecov.
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  check:
+    name: Lint + type-check + test + coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # full history so hatch-vcs can resolve a version
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Sync dev dependencies (locked)
+        run: uv sync --all-groups --frozen
+
+      - name: Format check
+        run: uv run ruff format --check .
+
+      - name: Lint
+        run: uv run ruff check .
+
+      - name: Type check
+        run: uv run ty check
+
+      - name: Test with coverage
+        run: uv run poe coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false
+        # Public repos use OIDC + tokenless upload; for private repos add:
+        # token: ${{ secrets.CODECOV_TOKEN }}

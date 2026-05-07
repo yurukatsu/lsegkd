@@ -1,0 +1,71 @@
+name: Release
+
+# Triggered when a tag matching v* (e.g. v0.1.0) is pushed.
+# Pipeline: test → build → publish to PyPI via Trusted Publishing (OIDC, no token).
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # full history so hatch-vcs can resolve the tag
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Sync dev dependencies (locked)
+        run: uv sync --all-groups --frozen
+
+      - name: Run checks (format / lint / type-check / test)
+        run: uv run poe check
+
+  build:
+    name: Build distributions
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # tags must be visible for hatch-vcs
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Build sdist + wheel
+        run: uv build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    name: Publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    # GitHub environment "pypi" must exist with the Trusted Publisher configured
+    # on PyPI (https://pypi.org/manage/account/publishing/).
+    environment:
+      name: pypi
+      url: https://pypi.org/p/lsegkd
+    permissions:
+      # Required by pypa/gh-action-pypi-publish for OIDC-based Trusted Publishing
+      id-token: write
+    steps:
+      - name: Download built artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
