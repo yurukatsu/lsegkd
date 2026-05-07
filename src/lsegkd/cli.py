@@ -89,7 +89,7 @@ def _main(
     dotenv_path: Annotated[
         Path,
         typer.Option(
-            "--dotenv_path",
+            "--dotenv-path",
             "-d",
             help="Path to the .env configuration file.",
         ),

@@ -25,7 +25,7 @@ API calls require three credentials, normally read from a `.env` file (see [.env
 - `LSEG_KNOWLEDGE_DIRECT_APP_ID`
 - `LSEG_KNOWLEDGE_DIRECT_PASSWORD`
 
-[Credentials](src/lsegkd/api/credentials.py) reads these from the environment unless explicit kwargs are passed; it raises in `__init__` if any are missing, so post-init the three fields are guaranteed non-empty `str`. The CLI loads `.env` via the top-level `-d/--dotenv_path` option *before* the subcommand runs.
+[Credentials](src/lsegkd/api/credentials.py) reads these from the environment unless explicit kwargs are passed; it raises in `__init__` if any are missing, so post-init the three fields are guaranteed non-empty `str`. The CLI loads `.env` via the top-level `-d/--dotenv-path` option *before* the subcommand runs.
 
 ## Architecture
 
