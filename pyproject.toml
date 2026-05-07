@@ -31,9 +31,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yurukatsu/lseg-knowledge-direct"
-Repository = "https://github.com/yurukatsu/lseg-knowledge-direct"
-Issues = "https://github.com/yurukatsu/lseg-knowledge-direct/issues"
+Homepage = "https://github.com/yurukatsu/lsegkd"
+Repository = "https://github.com/yurukatsu/lsegkd"
+Issues = "https://github.com/yurukatsu/lsegkd/issues"
 
 [project.scripts]
 lsegkd = "lsegkd.cli:cli"

@@ -1,8 +1,8 @@
 # LSEG Knowledge Direct Python API
 
 [![Python](https://img.shields.io/badge/python-3.12%2B-blue)](https://www.python.org)
-[![CI](https://img.shields.io/github/actions/workflow/status/yurukatsu/lseg-knowledge-direct/ci.yml?branch=master&label=CI)](https://github.com/yurukatsu/lseg-knowledge-direct/actions/workflows/ci.yml)
-[![codecov](https://img.shields.io/codecov/c/github/yurukatsu/lseg-knowledge-direct?branch=master)](https://codecov.io/gh/yurukatsu/lseg-knowledge-direct)
+[![CI](https://img.shields.io/github/actions/workflow/status/yurukatsu/lsegkd/ci.yml?branch=main&label=CI)](https://github.com/yurukatsu/lsegkd/actions/workflows/ci.yml)
+[![codecov](https://img.shields.io/codecov/c/github/yurukatsu/lsegkd?branch=main)](https://codecov.io/gh/yurukatsu/lsegkd)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A Python client for the **LSEG Knowledge Direct** REST API. It authenticates,
@@ -36,8 +36,8 @@ pip install lsegkd
 ### From source (development)
 
 ```bash
-git clone https://github.com/yurukatsu/lseg-knowledge-direct.git
-cd lseg-knowledge-direct
+git clone https://github.com/yurukatsu/lsegkd.git
+cd lsegkd
 uv sync --all-groups
 ```
 
